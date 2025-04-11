@@ -1,90 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './FinanceAssistant.css';
 import LearnSection from './LearnSection';
+import { domainQuestions } from '../apis/domQues.js';
+import { modeQuestions } from '../apis/goalsQues.js';
+import { productRecommendationQuestions } from '../apis/productRecmd.js';
+import Navb from './nav.jsx';
 
-
-const domainQuestions = {
-  'Stocks': ['What is your investment goal?', 'How much risk can you handle?'],
-  'SIP': ['What amount would you like to invest monthly?', 'What is your investment duration?'],
-  'Mutual Funds': ['Do you prefer debt or equity funds?', 'What is your expected return rate?'],
-  'IPO': ['Are you looking for short-term or long-term gains?', 'How much can you allocate for IPOs?'],
-};
-
-const modeQuestions = {
-  'Goals': [
-    'What are you saving or investing for right now? (e.g., vacation, wedding, education, emergency fund)',
-    'When do you want to achieve this goal?',
-    'How much money do you want to accumulate for this goal?',
-    'Are you planning to invest a lump sum or make regular contributions?',
-    'What is your current monthly savings capacity?'
-  ],  
-};
-
-const productRecommendationQuestions = [
-    {
-      question: "On a scale of 1 to 10, how do you feel about the possibility of losing money on your investments?",
-      options: [
-        "1 - Very uncomfortable",
-        "2", "3", "4", "5", "6", "7", "8", "9",
-        "10 - Very comfortable"
-      ]
-    },
-    {
-      question: "If one of your investments drops by 10% in a short period, how would you react?",
-      options: [
-        "Panic and sell",
-        "Feel concerned but hold",
-        "See it as a potential buying opportunity"
-      ]
-    },
-    {
-      question: "How long do you plan to keep these investments?",
-      options: [
-        "Less than a year",
-        "1-5 years",
-        "More than 5 years"
-      ]
-    },
-    {
-      question: "What is the primary goal of this investment?",
-      options: [
-        "Short-term gains",
-        "Long-term growth",
-        "Retirement",
-        "Specific future purchase"
-      ]
-    },
-    {
-      question: "What portion of your overall savings are you planning to invest in stocks?",
-      options: [
-        "Less than 10%",
-        "10-30%",
-        "30-50%",
-        "More than 50%"
-      ]
-    },
-    {
-      question: "What is your current income and financial stability like?",
-      options: [
-        "Low and unstable",
-        "Moderate and somewhat stable",
-        "High and very stable"
-      ]
-    },
-    {
-      question: "How familiar are you with investment risk and different types of risk?",
-      options: [
-        "Not very familiar",
-        "Somewhat familiar",
-        "Very familiar"
-      ]
-    }
-  ];  
 
 const FinanceAssistant = () => {
   const [messages, setMessages] = useState([
     { sender: 'bot', text: 'Hi! I\'m your Finance Assistant 💰. Ask me anything about investing, budgeting, or saving.' },
   ]);
+
   const [input, setInput] = useState('');
   const [selectedDomain, setSelectedDomain] = useState(null);
   const [selectedMode, setSelectedMode] = useState(null);
@@ -99,13 +26,7 @@ const FinanceAssistant = () => {
         document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' });
       }
   }, [messages,selectedMode]);
-
-//   useEffect(() => {
-//     if (selectedMode === 'Product Recommendation' || selectedMode === 'Goals') {
-//       document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' });
-//     }
-//   }, [selectedMode]);
-  
+ 
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -175,10 +96,12 @@ const FinanceAssistant = () => {
 
   return (
     <div className="chat-wrapper">
-      {/* Navbar */}
-      <nav className="navbar">
-        <h1>FinAI</h1>
-      </nav>
+
+        <nav className="navbar">
+            <h1>FinAI</h1>
+        </nav>
+        <Navb/>
+      
 
       {/* Domain Selection */}
       <section className="domain-selection">
