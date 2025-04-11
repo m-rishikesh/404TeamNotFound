@@ -142,3 +142,113 @@
     background-color: #1565c0;
   }
   
+
+  .domain-form-section {
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .domain-form-section h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #1e88e5;
+  }
+  
+  .domain-form .form-group {
+    margin-bottom: 1.2rem;
+  }
+  
+  .domain-form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .domain-form input {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+  }
+  
+  .submit-btn {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background-color: #1e88e5;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-btn:hover {
+    background-color: #1565c0;
+  }
+  
+  .mode-selection {
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto 1rem;
+    text-align: center;
+  }
+  
+  .mode-selection h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .mode-boxes {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .mode-box {
+    background-color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+    min-width: 140px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .mode-box:hover,
+  .mode-box.selected {
+    background-color: #1e88e5;
+    color: white;
+    border-color: #1e88e5;
+  }
+  .question-box {
+    margin-bottom: 20px;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  
+  .checkbox-label {
+    display: block;
+    margin: 5px 0;
+    font-size: 0.95rem;
+  }
+  
+  .checkbox-input {
+    margin-right: 8px;
+  }
+  
