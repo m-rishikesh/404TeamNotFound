@@ -35,28 +35,4 @@ async function run(prompt){
     return result.response.text();
 }
 
-async function getStockData(query) {
-    const {
-        income,
-        savings,
-        debt,
-        assets,
-        investmenttimeline,
-        risktolerance,
-        investmentgoals,
-        timeofinvestment
-    } = query
-
-    const query_string = `Give me in points only what's should be my milestones and these are the factors i provide income:${income},savings:${savings},debt:${debt},assets:${assets},investment:${investmenttimeline},risktolerance:${risktolerance},investmentgoals:${investmentgoals},timeofinvestment:${timeofinvestment}`
-
-    return await run(query_string);
-
-}
-
-router.get('/',async(req,res)=>{
-    const stock_data = req.body;
-    const data = await getStockData(stock_data);
-    res.send(data);
-})
-
-export default router
+export default run;
