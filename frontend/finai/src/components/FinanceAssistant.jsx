@@ -21,7 +21,7 @@ const FinanceAssistant = () => {
   const formRef = useRef(null);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    chatEndRef.current?.scrollIntoView({ behaviour:'smooth' });
     if (selectedMode === 'Product Recommendation' || selectedMode === 'Goals') {
         document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' });
       }
@@ -97,11 +97,11 @@ const FinanceAssistant = () => {
   return (
     <div className="chat-wrapper">
 
-        <nav className="navbar">
-            <h1>FinAI</h1>
-        </nav>
         <Navb/>
-      
+    <div className='mainheader'>
+        <p className='heading'>From Confused to Confident</p>
+        <p className='subheading'>Your AI-Powered Partner in Wealth & Wisdom</p>
+    </div>
 
       {/* Domain Selection */}
       <section className="domain-selection">
@@ -114,49 +114,6 @@ const FinanceAssistant = () => {
           ))}
         </div>
       </section>
-
-      {/* Mode Selection */}
-      <section className="mode-selection">
-        <h2>Choose your action!</h2>
-        <div className="mode-boxes">
-          {['Learn', 'Goals', 'Product Recommendation'].map((mode, i) => (
-            <div
-              key={i}
-              className={`mode-box ${selectedMode === mode ? 'selected' : ''}`}
-              onClick={() => handleModeClick(mode)}
-            >
-              {mode}
-            </div>
-          ))}
-        </div>
-      </section>
-
-        {/* Learn Section */}
-        {selectedMode === 'Learn' && <LearnSection />}
-
-      {/* Chat Section */}
-      <div className="chat-box">
-        <header className="chat-header">Finance Assistant AI 💸</header>
-        <div className="chat-messages">
-          {messages.map((msg, i) => (
-            <div key={i} className={`chat-bubble ${msg.sender === 'user' ? 'user-bubble' : 'bot-bubble'}`}>
-              {msg.text}
-            </div>
-          ))}
-          <div ref={chatEndRef} />
-        </div>
-        <div className="chat-input-section">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask your finance question..."
-            className="chat-input"
-          />
-          <button onClick={handleSend} className="chat-send-btn">Send</button>
-        </div>
-      </div>
 
       {/* Domain or Mode Form */}
       {(selectedDomain || (selectedMode && modeQuestions[selectedMode])) && (
@@ -191,28 +148,75 @@ const FinanceAssistant = () => {
           </form>
         </section>
       )}
-
-        {selectedMode === 'Product Recommendation' && (
-          <div>
-            <h2>Risk Tolerance Questionnaire 🧠</h2>
-            {productRecommendationQuestions.map((q, index) => (
-              <div key={index} className="question-box">
-                <p>{q.question}</p>
-                {q.options.map((option, idx) => (
-                  <label key={idx} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      name={`q${index}`}
-                      value={option}
-                      className="checkbox-input"
-                    />
-                    {option}
-                  </label>
-                ))}
-              </div>
+    
+      <div className='secondpage'>
+        {/* Mode Selection */}
+        <section className="mode-selection">
+            <h2>Choose your action!</h2>
+            <div className="mode-boxes">
+            {['Learn', 'Goals', 'Product Recommendation'].map((mode, i) => (
+                <div
+                key={i}
+                className={`mode-box ${selectedMode === mode ? 'selected' : ''}`}
+                onClick={() => handleModeClick(mode)}
+                >
+                {mode}
+                </div>
             ))}
-          </div>
-        )}
+            </div>
+        </section>
+
+        {/* Learn Section */}
+        {selectedMode === 'Learn' && <LearnSection />}
+
+        
+        {/* Chat Section */}
+        <div className="chat-box">
+            <header className="chat-header">Finance Assistant AI 💸</header>
+            <div className="chat-messages">
+            {messages.map((msg, i) => (
+                <div key={i} className={`chat-bubble ${msg.sender === 'user' ? 'user-bubble' : 'bot-bubble'}`}>
+                {msg.text}
+                </div>
+            ))}
+            <div ref={chatEndRef} />
+            </div>
+            <div className="chat-input-section">
+            <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Ask your finance question..."
+                className="chat-input"
+            />
+            <button onClick={handleSend} className="chat-send-btn">Send</button>
+            </div>
+        </div>
+      </div>
+      
+
+    {selectedMode === 'Product Recommendation' && (
+        <div>
+        <h2>Risk Tolerance Questionnaire 🧠</h2>
+        {productRecommendationQuestions.map((q, index) => (
+            <div key={index} className="question-box">
+            <p>{q.question}</p>
+            {q.options.map((option, idx) => (
+                <label key={idx} className="checkbox-label">
+                <input
+                    type="checkbox"
+                    name={`q${index}`}
+                    value={option}
+                    className="checkbox-input"
+                />
+                {option}
+                </label>
+            ))}
+            </div>
+        ))}
+        </div>
+    )}
     </div>
   );
 };

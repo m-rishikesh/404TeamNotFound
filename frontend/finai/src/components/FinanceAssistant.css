@@ -1,17 +1,28 @@
 /* Wrapper & Navbar */
+
+/* Reset default spacing */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, serif, sans-serif ;
+    
+  }
+  
+  /* Make the body and root container full width and height */
+
+
+  
 .chat-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #f3f4f6;
-    
   }
   
   .navbar {
     width: 100%;
     background-color: #1e88e5;
     color: white;
-    padding: 1rem 2rem;
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
@@ -25,23 +36,25 @@
     max-width: 600px;
     margin: 2rem auto 1rem;
     text-align: center;
+    
   }
   
   .domain-selection h2 {
     font-size: 1.3rem;
     margin-bottom: 1rem;
     color: #333;
-  }
+    
+ }
   
   .domain-boxes {
+    height:10rem;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
+    gap:1.5rem    
   }
   
   .domain-box {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     padding: 1rem 1.5rem;
     border-radius: 10px;
     border: 1px solid #ccc;
@@ -50,6 +63,9 @@
     min-width: 100px;
     font-weight: 500;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   .domain-box:hover {
@@ -201,6 +217,7 @@
     max-width: 600px;
     margin: 2rem auto 1rem;
     text-align: center;
+    
   }
   
   .mode-selection h2 {
@@ -213,7 +230,8 @@
     display: flex;
     gap: 1rem;
     justify-content: center;
-    flex-wrap: wrap;
+    height:10rem;
+    
   }
   
   .mode-box {
@@ -224,8 +242,12 @@
     cursor: pointer;
     font-weight: 500;
     transition: 0.3s;
-    min-width: 140px;
+    min-width: 120px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+    
   }
   
   .mode-box:hover,
@@ -251,4 +273,42 @@
   .checkbox-input {
     margin-right: 8px;
   }
+
+  .mainheader {
+    margin:70px;
+  }
+  .heading {
+    font-size: 40px;
+    font-weight: bold;
+  }
+  .subheading {
+    font-size: 25px;
+  }
+
+  .secondpage {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px 30px;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+    display: flex;
+    flex-direction: column;
+    gap: 20px;                 
+    align-items: stretch;     
+  }
+  
+  .chat-box {
+    margin-top: 80px;
+    align-self: center;        
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  
   
