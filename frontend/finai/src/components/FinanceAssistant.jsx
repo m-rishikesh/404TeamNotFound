@@ -1,32 +1,87 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './FinanceAssistant.css';
 import LearnSection from './LearnSection';
+import RiskAssessmentForm from './RiskAssessmentForm';
 import { domainQuestions } from '../apis/domQues.js';
-import { modeQuestions } from '../apis/goalsQues.js';
 import { productRecommendationQuestions } from '../apis/productRecmd.js';
 import Navb from './nav.jsx';
-
 
 const FinanceAssistant = () => {
   const [messages, setMessages] = useState([
     { sender: 'bot', text: 'Hi! I\'m your Finance Assistant 💰. Ask me anything about investing, budgeting, or saving.' },
   ]);
-
   const [input, setInput] = useState('');
   const [selectedDomain, setSelectedDomain] = useState(null);
-  const [selectedMode, setSelectedMode] = useState(null);
   const [domainAnswers, setDomainAnswers] = useState({});
-  const [modeAnswers, setModeAnswers] = useState({});
+  const [selectedMode, setSelectedMode] = useState(null);
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+  const [isQuestionnaireComplete, setIsQuestionnaireComplete] = useState(false);
   const chatEndRef = useRef(null);
   const formRef = useRef(null);
+  const [showRiskForm, setShowRiskForm] = useState(false);
+
+  const handleSendgenai = async () => {
+    if (!input.trim()) return;
+
+    const newUserMessage = { sender: 'user', text: input };
+    setMessages(prev => [...prev, newUserMessage]);
+
+    try {
+      const response = await fetch('http://localhost:8080/getDomain/personalizedtest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_query: input }),
+      });
+
+      const data = await response.json();
+      setMessages(prev => [...prev, { sender: 'bot', text: data.reply }]);
+    } catch (err) {
+      console.error('Error fetching AI response:', err);
+      setMessages(prev => [...prev, { sender: 'bot', text: 'Sorry, something went wrong.' }]);
+    }
+
+    setInput('');
+  };
+
+  const handleDomainSubmittobackend = async (e) => {
+    e.preventDefault();
+    setIsQuestionnaireComplete(true);
+
+    const payload = {
+      domain: selectedDomain,
+      question: domainQuestions[selectedDomain],
+      answers: Object.values(domainAnswers),
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/getDomain/givetest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.text();
+      console.log('Backend response:', result);
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
+
+    setMessages(prev => [
+      ...prev,
+      { sender: 'bot', text: `You selected ${selectedDomain} and answered: ${JSON.stringify(domainAnswers)}.` },
+    ]);
+  };
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behaviour:'smooth' });
-    if (selectedMode === 'Product Recommendation' || selectedMode === 'Goals') {
-        document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' });
-      }
-  }, [messages,selectedMode]);
- 
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (selectedMode === 'Risk Assessment' || selectedMode === 'Goals') {
+      document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, selectedMode]);
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -60,86 +115,74 @@ const FinanceAssistant = () => {
 
   const handleDomainClick = (domain) => {
     setSelectedDomain(domain);
+    setShowQuestionnaire(true);
+    setSelectedMode(null);
     setDomainAnswers({});
-    setSelectedMode(null); // clear any mode
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 200);
+    setIsQuestionnaireComplete(false);
   };
 
-  const handleModeClick = (mode) => {
-    setSelectedMode(mode);
-    setModeAnswers({});
-    setSelectedDomain(null); // clear any domain
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 200);
-  };
-
-  const handleAnswerChange = (index, value, type) => {
-    const update = type === 'domain' ? domainAnswers : modeAnswers;
-    const setter = type === 'domain' ? setDomainAnswers : setModeAnswers;
-    setter({
-      ...update,
+  const handleAnswerChange = (index, value) => {
+    setDomainAnswers({
+      ...domainAnswers,
       [index]: value,
     });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleDomainSubmit = (e) => {
     e.preventDefault();
-    const submittedData = selectedDomain
-      ? { type: 'domain', name: selectedDomain, answers: domainAnswers }
-      : { type: 'mode', name: selectedMode, answers: modeAnswers };
-    console.log('Form Submitted:', submittedData);
-    alert('Form submitted successfully!');
+    setIsQuestionnaireComplete(true);
+    setMessages(prev => [
+      ...prev,
+      { sender: 'bot', text: `You selected ${selectedDomain} and your knowledge level is: ${JSON.stringify(domainAnswers)}.` },
+    ]);
+  };
+
+  const handleModeClick = (mode) => {
+    setSelectedMode(mode);
+    setSelectedDomain(null);
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 200);
   };
 
   return (
     <div className="chat-wrapper">
+      <Navb />
 
-        <Navb/>
-    <div className='mainheader'>
-        <p className='heading'>From Confused to Confident</p>
-        <p className='subheading'>Your AI-Powered Partner in Wealth & Wisdom</p>
-    </div>
+      <div className="mainheader">
+        <p className="heading">From Confused to Confident</p>
+        <p className="subheading">Your AI-Powered Partner in Wealth & Wisdom</p>
+      </div>
 
-      {/* Domain Selection */}
-      <section className="domain-selection">
-        <h2>Select the domain!</h2>
-        <div className="domain-boxes">
-          {Object.keys(domainQuestions).map((domain, i) => (
-            <div key={i} className="domain-box" onClick={() => handleDomainClick(domain)}>
-              {domain}
-            </div>
-          ))}
-        </div>
-      </section>
+      {!selectedDomain && (
+        <section className="domain-selection">
+          <h2>Select the domain!</h2>
+          <div className="domain-boxes">
+            {Object.keys(domainQuestions).map((domain, i) => (
+              <div
+                key={i}
+                className="domain-box"
+                onClick={() => handleDomainClick(domain)}
+              >
+                <span>{domain}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* Domain or Mode Form */}
-      {(selectedDomain || (selectedMode && modeQuestions[selectedMode])) && (
+      {showQuestionnaire && selectedDomain && !isQuestionnaireComplete && (
         <section className="domain-form-section" ref={formRef}>
-          <h2>{selectedDomain || selectedMode} Questions</h2>
-          <form className="domain-form" onSubmit={handleFormSubmit}>
-            {(selectedDomain
-              ? domainQuestions[selectedDomain]
-              : modeQuestions[selectedMode]
-            ).map((question, i) => (
-              <div className="form-group" key={i}>
+          <h2>How much do you know about {selectedDomain}?</h2>
+          <form onSubmit={handleDomainSubmittobackend}>
+            {domainQuestions[selectedDomain].map((question, i) => (
+              <div key={i} className="form-group">
                 <label>{question}</label>
                 <input
                   type="text"
-                  value={
-                    selectedDomain
-                      ? domainAnswers[i] || ''
-                      : modeAnswers[i] || ''
-                  }
-                  onChange={(e) =>
-                    handleAnswerChange(
-                      i,
-                      e.target.value,
-                      selectedDomain ? 'domain' : 'mode'
-                    )
-                  }
+                  value={domainAnswers[i] || ''}
+                  onChange={(e) => handleAnswerChange(i, e.target.value)}
+                  placeholder="Your answer here"
                   required
                 />
               </div>
@@ -148,75 +191,62 @@ const FinanceAssistant = () => {
           </form>
         </section>
       )}
-    
-      <div className='secondpage'>
-        {/* Mode Selection */}
+
+      {isQuestionnaireComplete && !selectedMode && (
         <section className="mode-selection">
-            <h2>Choose your action!</h2>
-            <div className="mode-boxes">
-            {['Learn', 'Goals', 'Product Recommendation'].map((mode, i) => (
-                <div
+          <h2>Choose your action!</h2>
+          <div className="mode-boxes">
+            {['Learn', 'Risk Assessment', 'Goals'].map((mode, i) => (
+              <div
                 key={i}
                 className={`mode-box ${selectedMode === mode ? 'selected' : ''}`}
                 onClick={() => handleModeClick(mode)}
-                >
+              >
                 {mode}
-                </div>
+              </div>
             ))}
-            </div>
+          </div>
         </section>
+      )}
 
-        {/* Learn Section */}
-        {selectedMode === 'Learn' && <LearnSection />}
+      {selectedMode === 'Learn' && isQuestionnaireComplete && (
+        <div className="learn-section">
+          <LearnSection />
+        </div>
+      )}
 
-        
-        {/* Chat Section */}
-        <div className="chat-box">
+{selectedMode === 'Risk Assessment' && isQuestionnaireComplete && (
+  <div id="form-section" ref={formRef}>
+    <RiskAssessmentForm />
+  </div>
+)}
+
+      {isQuestionnaireComplete && selectedDomain && selectedMode !== 'Learn' && (
+        <div className="secondpage">
+          <div className="chat-box">
             <header className="chat-header">Finance Assistant AI 💸</header>
             <div className="chat-messages">
-            {messages.map((msg, i) => (
+              {messages.map((msg, i) => (
                 <div key={i} className={`chat-bubble ${msg.sender === 'user' ? 'user-bubble' : 'bot-bubble'}`}>
-                {msg.text}
+                  {msg.text}
                 </div>
-            ))}
-            <div ref={chatEndRef} />
+              ))}
+              <div ref={chatEndRef} />
             </div>
             <div className="chat-input-section">
-            <input
+              <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Ask your finance question..."
                 className="chat-input"
-            />
-            <button onClick={handleSend} className="chat-send-btn">Send</button>
+              />
+              <button onClick={handleSendgenai} className="chat-send-btn">Send</button>
             </div>
+          </div>
         </div>
-      </div>
-      
-
-    {selectedMode === 'Product Recommendation' && (
-        <div>
-        <h2>Risk Tolerance Questionnaire 🧠</h2>
-        {productRecommendationQuestions.map((q, index) => (
-            <div key={index} className="question-box">
-            <p>{q.question}</p>
-            {q.options.map((option, idx) => (
-                <label key={idx} className="checkbox-label">
-                <input
-                    type="checkbox"
-                    name={`q${index}`}
-                    value={option}
-                    className="checkbox-input"
-                />
-                {option}
-                </label>
-            ))}
-            </div>
-        ))}
-        </div>
-    )}
+      )}
     </div>
   );
 };

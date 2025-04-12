@@ -4,20 +4,35 @@ const router = Router();
 
 let personalizeddata;
 
-router.get('/givetest',async (req,res)=>{
-    const {testdata} = req.body // this will take the test data.
-    const {explevel,investmentgoals,riskapetite,interestedarea,investmentstyle,marketknowledge,timeavailability,platformused,educationalbackground,languagepreferences,} = req.body
+router.post('/givetest',async (req,res)=>{
+    const {domain, question, answers} = req.body // this will take the test data.
+    // const {explevel,investmentgoals,riskapetite,interestedarea,investmentstyle,marketknowledge,timeavailability,platformused,educationalbackground,languagepreferences,} = req.body
+
+    personalizeddata = domain + question + answers
+    console.log(personalizeddata);
+    res.send("thanks for responding");
+
+})
+
+router.post('/personalizedtest', async (req, res) => {
+    const { user_query } = req.body;
+  
+    const prompt = `
+    ${personalizeddata}
     
-    personalizeddata = `experience level : ${explevel},investmentgoals : ${investmentgoals}, riskapetite: ${riskapetite}, investmentstyle: ${investmentstyle}, marketknowledge: ${marketknowledge}, timeavailability: ${timeavailability}, platformused : ${platformused}, educationalbackground: ${educationalbackground}, languagepreferences: ${languagepreferences} interesteddomain: ${interestedarea}`
-
-    console.log(testdata)
-    res.send(await chatbox4yt(testdata))
-
-})
-
-router.get('/personalizedtest',async(req,res)=>{
-    const {user_query} = req.body
-    const actual_data = personalizeddata + user_query + "give the personalized response according to the user knowledge like if you think according to the personalized data he is beginner tell him in newbie style keeping professionalism intact in the result and answer should be short as much as possible and crisp and always revoke the query if asked other than finance. "
-    res.send(await chatbox4yt(actual_data))
-})
+    User Query: "${user_query}"
+    
+    Based on the user's responses above, answer the query in a way that fits their knowledge level (e.g., beginner = simpler, professional tone).
+    If the query is not related to finance, politely decline.
+    Keep your answer short and crisp.
+    `;
+  
+    try {
+      const response = await chatbox4yt(prompt); // This should return the AI's response text
+      res.send({ reply: response });
+    } catch (err) {
+      console.error('AI request error:', err);
+      res.status(500).send("Error generating AI response");
+    }
+  });
 export default router

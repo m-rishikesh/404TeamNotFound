@@ -73,7 +73,7 @@ async function getstockrecommandation(query) {
     Total Investment Time: ${totaltime}
     Expected Growth Time: ${growthtime}
     Investment Risk Type: ${investmentrisk}
-    Query: rank the companies stocks best possible way so that i can choose from that.don't describe much just return the data.
+    Query: rank the companies stocks best possible way so that i can choose from that.don't describe a bit also just rank them.
     `;
     
       return await run(actualdata);
@@ -82,7 +82,8 @@ async function getstockrecommandation(query) {
 router.use('/',async(req,res)=>{
     const query = req.body;
     const stockdata = await getstockrecommandation(query);
-    res.send(stockdata)
+    console.log(stockdata)
+    res.send({"data": stockdata})
 })
 
 export default router
