@@ -35,11 +35,11 @@ router.get('/',async (req,res)=>{
     res.send(await get10ytquery(query));
 })
 
-router.get('/chatquery',async (req,res)=>{
+router.post('/chatquery',async (req,res)=>{
     const {chatquery} = req.body;
     const actual_query = `The user is learning about financial topics like Mutual Funds, SIPs, and Stock Investing.Explain the following question in very simple terms, like you're teaching a beginner.Use a friendly tone.And if the question somewhere unrelated to finance just revoke it and tell the user to ask for financial question only Question: ${chatquery}`
     const response = await chatbox4yt(actual_query);
-    res.send(response);
+    res.json({ answer: response });
 })
 
 export default router;

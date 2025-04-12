@@ -8,7 +8,7 @@ import getProduct from "./routes/getProduct.js"
 import cors from "cors"
 const app = express();
 const allowedorigin = [
-    'http://localhost:3000',
+    'http://localhost:5173',
     'https://onrender.xyz'
 ]
 
