@@ -30,8 +30,9 @@ async function run(prompt){
         generativeConfig,
         history: [],
     })
-
+    console.log("from chatbox",prompt)
     const result = await chatSession.sendMessage(`${prompt}`);
+    console.log("response", result.response.text);
     return result.response.text();
 }
 

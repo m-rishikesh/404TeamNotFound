@@ -4,7 +4,19 @@ import GetDomain from "./routes/GetDomain.js"
 import sendToGemini from "./routes/sendToGemini.js"
 import top10ytvids from "./routes/top10ytvids.js"
 import getStocks from "./routes/getStock.js"
+import getProduct from "./routes/getProduct.js"
+import cors from "cors"
 const app = express();
+const allowedorigin = [
+    'http://localhost:3000',
+    'https://onrender.xyz'
+]
+
+
+app.use(cors({
+    origin : allowedorigin
+}))
+
 
 app.use(express.json());
 
@@ -16,6 +28,7 @@ app.use('/getDomain',GetDomain) //used to give the test to the user when it come
 app.use('/getQuery',sendToGemini);
 app.use('/top10ytquery',top10ytvids);
 app.use('/getstocks',getStocks);
+app.use('/getProduct',getProduct);
 
 
 app.listen(8080,(req,res)=>{
